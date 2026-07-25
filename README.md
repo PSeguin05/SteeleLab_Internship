@@ -1,4 +1,4 @@
-# SteeleLab_Internship
+# SteeleLab Internship
 
 Public repository containing the work completed during my internship at **SteeleLab**, **TU Delft**.
 
