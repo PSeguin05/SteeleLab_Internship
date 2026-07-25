@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tunable_microwave_cavity"
+version = "0.1.0"
+description = "Use and control an automated wide-ranged finely tunable microwave cavity for narrowband phase noise filtering"
+requires-python = ">=3.8"
+readme = "README.md"
+license = {file = "LICENSE"}
+
+authors = [
+    {name = "Pacôme Seguin"}
+]
+
+dependencies = [
+    "numpy",
+    "scipy",
+    "xarray",
+    "matplotlib",
+    "zaber-motion"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
