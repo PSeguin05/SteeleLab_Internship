@@ -1,0 +1,803 @@
+\documentclass[11pt,a4pape,longbibliography]{article}
+\usepackage{mon_package}
+\usepackage{indentfirst}
+
+\usepackage[
+    backend=bibtex,
+    sorting=none,
+    maxcitenames=2,
+    maxbibnames=99,
+    url=false,
+    %urldate=false,
+    doi=true,
+    useprefix=true
+]{biblatex}
+
+\usepackage[utf8]{inputenc}
+
+\addbibresource{SteeleLab_Internship.bib}
+
+\pagestyle{fancy}
+\fancyhead[L]{\scriptsize \textsc{Fabrication of a High-Q Tunable Microwave Filter}}
+\fancyhead[R]{\scriptsize \textsc{Pacôme Seguin}}
+\fancyfoot[C]{ \thepage}	
+
+\begin{document}
+
+\setlength{\parindent}{0pt}
+
+\thispagestyle{empty} 
+
+\includegraphics[height=2cm]{Logo/ENS_Lyon.png}
+\hfill \includegraphics[height=2cm]{Logo/Univ_lyon.png} \hfill \includegraphics[height=2cm]{Logo/UCBL.jpg}
+
+\vspace{0.5cm}
+
+\begin{tabularx}{\textwidth}{@{} l X l @{} }
+{\sc Master Sciences de la Matière} 	&	& Internship 2026 \\
+{\it École Normale Supérieure de Lyon}	&	& Pacôme Seguin \\
+{\it Université Claude Bernard Lyon I}	& 	& M1 Physique
+\end{tabularx}
+
+\begin{center}
+
+\vspace{1cm}
+
+\rule[11pt]{5cm}{0.5pt}
+
+\textbf{\LARGE Fabrication of a High-Q Tunable Microwave Filter for Ground-State Cooling of a Micromechanical Resonator}
+
+% 
+
+\rule{5cm}{0.5pt}
+
+\vspace{1cm}
+
+\parbox{15cm}{\small
+\textbf{Abstract}: The objective of this research internship was to reproduce a microwave cavity design, in order to achieve ground-state cooling of a micromechanical resonator, based on the work of \textcite{joshi_automated_2021}. This copper cavity is tunable in frequency, which enables the realization of a high-Q microwave filter ($Q \geqslant \num{5e3}$) over a wide frequency range (from \SI{4}{\GHz} to \SI{12}{\GHz}). This internship was divided into two main parts: The first part focused on simulations of the cavity to confirm the initial design of the filter and to understand the electromagnetic mode distribution within it. The second part consisted of the experimental setup. It began with characterization of the electromagnetic modes and a preliminary investigation of the optimal pin coupler design. Following the implementation of an automated tuning procedure, the filter was used to achieve an initial phase-noise reduction of a microwave source used to measure a microwave optomechanical device, paving the way towards ground-state cooling.}
+
+\vspace{0.5cm}
+
+\parbox{15cm}{
+\textbf{Key words}: Microwave filter, copper cavity, optomechanics, ground-state cooling, numerical simulations}
+
+\vspace{0.5cm}
+
+\parbox{15cm}{
+Internship supervised by:\\
+{\bf Gary Steele, Marius Villiers \& Matteo Arfini}
+
+\href{g.a.steele@tudelft.nl}{\tt g.a.steele@tudelft.nl} | \href{m.villiers@tudelft.nl}{\tt m.villiers@tudelft.nl} | \href{m.arfini@tudelft.nl}{\tt m.arfini@tudelft.nl}
+
+SteeleLab - Kavli Institute of Nanoscience
+
+\textit{Department of Quantum Nanoscience}\\
+\textit{Delft University of Technology}\\
+\textit{Lorentzweg 1, 2628 CJ Delft}\\
+\textit{The Netherlands}
+
+\url{https://steelelab.tudelft.nl/}}
+
+
+\vspace{0.5cm}
+
+\includegraphics[height=1.7cm]{Logo/TUDelft.png}
+\hspace{2cm}
+\includegraphics[height=1.7cm]{Logo/SteeleLab.png}
+
+\end{center}
+
+\vfill
+\hfill \today
+
+\newpage
+\thispagestyle{empty}
+
+\section*{Acknowledgments}
+
+These past three months in the SteeleLab have been a truly rewarding experience. I learned a lot while having multiple enjoyable moments, and I want to thank some people.\\
+
+First of all, Gary, I would like to warmly thank you for proposing this internship in your group. You have always been there to support me and ensure that the project went well. You found a relevant solution to almost every issue, which impressed me a lot. Above all, keep that contagious positivity that makes the atmosphere within the group so enjoyable.\\
+
+Of course, this internship would not have been possible without my two supervisors, Marius and Matteo. Your tandem always worked well, with at least one of you available to answer my numerous questions. Marius, you taught me scientific and experimental rigor that I lacked. I wish you all the best with your paper with Sercan. Matteo, you have always been able to explain optomechanics in a simple and intuitive way, while adding a touch of humor and sarcasm that made everything much more enjoyable. Thanks to both of you for proofreading this report multiple times, and the many improvements you suggested. I am sure that some of your advice will remain useful, even years from now.\\
+
+What would the long days of measurements have been without Sarah and Tommy? Having the opportunity to work with a cryostat and real drums was probably one of the most memorable aspects of this internship. I have great memories of the Fridays we spent together. Sarah, you were always there whenever I had problems with my measurements. Thanks for all the explanations you provided, and congratulations on your impressive results (Q = 115 million!). Tommy, thanks to you I learned a lot about dilution refrigerators. I will remember for a long time the famous geyser you created for us in the lab.\\
+
+Anne, I could hardly hope for a better office colleague. Our evening discussions after some long and demanding days were all it took to put a smile back on my face. Good luck with your new position at QuantWare, I am sure you will be an excellent nanofabrication engineer.\\
+
+I would also like to thank everyone I had the pleasure of working with during these three months. Jels, Sercan, Jean-Paul, Robin, Hugo, Alex, and all the others, perhaps our paths will cross again someday. In one way or another, you have all contributed to making this project possible.\\
+
+I am particularly grateful to Lizzy, who has always been responsive and helpful every time I had administrative issues, providing high-quality answers to my requests.\\
+
+Last but not least, I would like to give special thanks to Benjamin. Once again, your advice on finding this internship was truly invaluable to me, and I really appreciate having you as my professor again this year. Since I am preparing the Agrégation next year, I will not have the chance to be taught by you during that time, but I would be delighted to have you as my professor again in two years.\\
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+%\setcounter{page}{1}
+%\setlength{\parindent}{16pt}
+
+\newpage
+
+\section{Introduction}
+
+\subsection{Internship context}
+
+Despite the remarkable success of both Quantum Theory and General Relativity in describing physical phenomena, their incompatibility remains one of the major open questions in modern physics. Indeed, Quantum Theory has helped us understand physical phenomena at the atomic level, while General Relativity governs the dynamics of planets, stars and black holes. Since these two theories describe phenomena on vastly different scales, it is not surprising that they are quite hard to reconcile, which might explain why quantum effects involving gravitational interactions have not yet been observed. A current hypothesis in the research community is that gravitational effects are the reason why these quantum states collapse faster as we increase the scale of the experiment. This might be a first reason of the impossibility to observe quantum effects for heavy objects ($m\gg\SI{1}{\ng}$). Following Lajos Di\'osi's work \cite{diosi_universal_1987} on the effect of gravitational fluctuations on quantum states, Roger Penrose estimated a time scale of this effect \cite{hameroff_consciousness_2014}, giving birth to the Di\'osi-Penrose effect.\\
+
+Cavity optomechanics is a branch of quantum physics that explores the interaction between electromagnetic modes (photons) and mechanical motions (phonons) \cite{aspelmeyer_cavity_2014}, enabled by the coupling of photons confined in a cavity to a mechanical resonator. An example experimental platform is the implementation of a superconducting LC resonator (equivalent of the cavity where photons live) where one of the two plates of the capacitor is a drum acting like a trampoline at a microscopic scale.  The mechanical vibration of the drum is quantified by its phonon occupancy. An intuitive way to understand optomechanical coupling is to consider the role of the drum on the cavity frequency: vibrations from the mechanics cause a change in the capacitance of the circuit resulting in a position-dependent shift of its resonance frequency. In reality, the interaction also involves back-action, as the cavity also influences the mechanical resonator via the radiation pressure force \cite{aspelmeyer_cavity_2014}.
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=4cm]{Figures/Drum_1.png}}
+\hspace{1cm}
+\centering{\includegraphics[height=4cm]{Figures/LC_circuit.png}}
+\caption{Left: Scanning electron microscope image of a drum resonator fabricated in the group (Image from M. Arfini). The drum (circular shape in the background) and the inductance (in the foreground) can be distinguished. Right: Superconducting LC resonator, with a mechanical drum used as one face of the capacitor. $\hat{x}$ is the displacement of the drum, which modulates the total capacitance $C(x)$ (Adapted from \textcite{van_arragon_exploring_2025}).}
+\label{fig:LC_circuit}
+\end{figure}
+
+This type of platform is a promising candidate for measuring gravitational effects at a quantum scale and potentially observe Di\'osi-Penrose effect \cite{gely_superconducting_2021}. This optomechanical design is currently used in the SteeleLab, and Figure \ref{fig:LC_circuit} shows one such device fabricated in the laboratory clean rooms. The main advantages of superconducting drums are our ability to obtain high quality factors ($Q\sim \numrange{1e6}{100e6}$), while having sufficiently large zero-point fluctuations (ZPF). These criteria are important, because gravity-induced collapse must precede the resonator's intrinsic decoherence. In order to compare these two decoherence channels, we can compute their characteristic time (from \textcite{gely_superconducting_2021}). The finite temperature of the resonator acts as a source of decoherence, leading to a characteristic decoherence time:
+\begin{equation}
+\label{eq:t_coh}
+t_{\rm{coh}}=\dfrac{1}{2(2n_{\rm{th}} + 1)n\Gamma_m}
+\end{equation}
+where $n_{\rm{th}}=1/\left(\exp(\hbar\Omega_m / k_B T)\right)$ is the phonon occupancy due to the thermal bath (with $\Omega_m$ the resonance frequency of the oscillator), $n$ the number of phonons, and $\Gamma_m$ the damping rate of the mechanics. Then, in the limit where $x_{\rm{ZPF}}$ is large enough, an estimation of the  Di\'osi-Penrose time is:
+\begin{equation}
+\label{eq:t_DP}
+t_{\rm{DP}}=\dfrac{1}{m_{\rm{eff}}}\SI{3e-15}{\kg\s}
+\end{equation}
+
+To observe gravitational effects, it is necessary to have $t_{\rm{coh}} \gg t_{\rm{DP}}$. Thanks to Equations \ref{eq:t_coh} and \ref{eq:t_DP}, we understand the necessity of high quality factors, since we need a small $\Gamma_m=\dfrac{\Omega_m}{Q}$, and large zero-point fluctuations. Furthermore, the thermal bath influences the coherence time, and one possibility to reduce the phonon occupancy is to prepare the mechanical resonator in its ground state.
+
+Unlike superconducting LC resonators used for these experiments, it is more complicated to achieve ground-state cooling with mechanical resonators. Indeed, the usual resonance frequency scale for LC resonators is $\omega_c = 2\pi\times\SI{4}{\GHz}$ and given that every experiment is run in a dilution refrigerator ($T = \SI{10}{\milli\kelvin}$), we can compute the thermal occupation using the Bose-Einstein distribution:
+\begin{equation}
+n_{th} = \dfrac{1}{\exp\left(\frac{\hbar\omega_c}{k_B T}\right) - 1} \approx \num{5e-9}
+\end{equation}
+
+As for the mechanical resonators fabricated in the lab, the resonance frequency is 3 orders of magnitude lower ($\Omega_m = 2\pi\times\SI{1.5}{\MHz}$). Thus, the thermal phonon occupation is $n_{th} \approx 138$. The corresponding temperature for mechanical ground state is $T_{GS} = \SI{50}{\micro\kelvin}$, which cannot be reached with a cryostat.\\ 
+
+One solution is sideband cooling. The main idea is to drive the system with a strong pump field red-detuned by exactly one mechanical frequency (red sideband frequency $\omega_{RSB}=\omega_c - \Omega_m$), which generates a coherent resonant interaction between the two modes (Figure \ref{fig:sideband_cooling}). Thereby, an incoming cavity photon absorbs one phonon from the mechanics, leading to an energy decrease of the resonator. By iterating this process, the sample can approach its ground-state thanks to the repeated annihilation of phonons. The first ground-state cooling with a mechanical oscillator in a superconducting planar device has been achieved by \textcite{teufel_sideband_2011} in 2011.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=5cm]{Figures/sideband_cooling.pdf}
+\hspace{0.5cm}
+\includegraphics[height=5cm]{Figures/Optical_damping_bis.png}
+\caption{Left: Possible transitions to control the thermal occupation of the mechanics. From left to right: Red sideband transition which removes one phonon from the drum; carrier transition which only influences the cavity; blue sideband transition which adds one phonon to the mechanical resonator (Adapted from \textcite{meystre_laser_2021}). Right: Example of the finite noise of a microwave source on the red side-band (in green). Below, colormap of the optomechanical damping $\Gamma_{\rm{opt}}$ with respect to the frequency and the cavity photon occupation. $\Gamma_{\rm{opt}}>0$ means cooling of the sample (red area) while a negative optomechanical damping corresponds to mechanical heating (blue area). Calculation details can be found in Appendix \ref{apx:gamma_opt}.} 
+\label{fig:sideband_cooling}
+\end{figure}
+
+Unfortunately, this cooling method is limited by the noise of the microwave source used to pump on the red side-band. Indeed, in an ideal scenario, the signal coming from a generator is a perfect and infinitely  narrow peak (like a Dirac delta distribution), but in reality, we measure a continuous spectrum around the carrier signal. In this specific case, we focus in particular on the noise at the cavity frequency ($\omega_c$), since it entails two limitations for our system (Figure \ref{fig:sideband_cooling}):
+\begin{enumerate}
+	\item This noise is detuned by $\Omega_m$ away from the carrier, thus it can produce a beat note with the carrier that can excite the mechanics. Although the noise amplitude is extremely small, the strong red sideband drive ($\sim\SI{-10}{\dBm}$) amplifies its effect through this interference process, making the resulting beat note non-negligible when the mechanical resonator approaches its ground state.
+	\item This noise can heat up the system due to the finite optomechanical damping rate around the carrier frequency, especially  above the cavity resonance. Indeed, the negative damping rate ($\Gamma_{\rm opt}<0$) may seem negligible compared to the larger damping rates reached under blue-sideband driving, but it becomes critical close to the ground state. A single additional phonon already represents a significant excitation.\\
+\end{enumerate}
+
+Therefore, in order to limit these adverse effects, a first solution is to filter the output signal of the microwave source to suppress the noise at this particular frequency. More specifically, the aim of this internship was to implement a band-stop filter at the cavity frequency to reduce the noise, before sending it into the cryostat.
+
+\subsection{Preliminary project description}
+
+This band-stop filter must have several characteristics in order to be usable for the experiments we want to run in the group. Firstly, the filter needs to cover a wide frequency range, ideally from $\SI{4}{\GHz}$ to $\SI{12}{\GHz}$, because all the cavities designed and fabricated in the lab have different frequencies, and this filter must be compatible with all of these samples. Secondly, we need high quality factors so that the filter bandwidth (over which it attenuates the input signal) is as narrow as possible. Indeed, the filter operates close to the pump frequency and should not attenuate this incoming signal, or at least attenuate it as little as possible. Thirdly, an easily adjustable filter is also an important criterion since several people will use it.\\
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=4cm]{Figures/cavity_plan.pdf}}
+\caption{Schematic of the copper cavity. The arrows indicate the multiple degrees of freedom: translation of the piston to change the cavity length with a micrometric motor (green), rotation and translation of the pin coupler to change the coupling rate (blue and red). The motor is a Zaber X-LSN050A with a $\SI{50}{\mm}$ stroke. Thus, the cavity length can vary from $\SI{63}{\mm}$ to $\SI{113}{\mm}$.}
+\label{fig:cavity_plan}
+\end{figure}
+
+One way to satisfy these requirements is to design a cylindrical copper cavity as done in \cite{joshi_automated_2021}. As shown in Figure \ref{fig:cavity_plan}, one side of the cavity is connected to a linear stage and is free to move (green arrow). Thereby, changing the cavity length allows us to cover a wide range of frequencies (see Section \ref{sec:cavity_theory}). Another benefit of copper is its excellent conductivity ($\sigma=\SI{59.6e6}{\siemens\per\m}$), such that the cavity reaches high quality factors ($Q\geqslant \num{5e3}$). Figure \ref{fig:cavity_plan} also depicts how the cavity is coupled to the outside world, using an open wire pin coupler. This pin is free to move back and forth, and can also rotate in order to change the coupling rate (more details are provided in Section \ref{sec:scat_theory}).
+
+The objectives with this filter are:
+\begin{enumerate}
+	\item Determine suitable geometries for the pin coupler to have high quality factors (to reach small bandwidths), and strong attenuations ($> \SI{30}{\decibel}$).
+	\item Implement a script to automate the tuning of the cavity to the desired frequency ($\omega_c$ for ground-state cooling).
+\end{enumerate}
+
+\section{Theoretical aspects}
+\label{sec:theory}
+
+\subsection{Scattering theory}
+\label{sec:scat_theory}
+
+One of the most useful parameters used to characterize the microwave absorption spectra of a resonator (or microwave components in general) is the scattering matrix. This matrix describes the reflection coefficient (diagonal values) and in transmission (off-diagonal values) of a $n$-port device. In our case, the cavity has only one port, so the S-matrix is a scalar: $S = (S_{11})$. Thus,
+\begin{equation}
+\label{eqn:S11}
+    S_{11}(\omega) = \dfrac{a_{\rm{out}}}{a_{\rm{in}}} = 1 - \dfrac{\kappa_{\rm{c}}}{i(\omega - \omega_c) + \dfrac{\kappa_{\rm{t}}}{2}}
+\end{equation}
+where $\omega$ is the frequency of the input signal, $\omega_c$ the resonance frequency of the cavity, $\kappa_c$ the coupling rate (in $\si{\Hz}$) and $\kappa_t = \kappa_i + \kappa_c$ the total losses (also in $\si{\Hz}$). This parameter is measured with a VNA (Vector Network Analyzer).
+Figure \ref{fig:cavity_losses} shows a representation of these two losses in the specific context of a copper cavity. In black, the internal losses $\kappa_i$ corresponding to the finite conductivity of copper, and leakage from the gaps and holes of the cavity. The coupling rate $\kappa_c$ (in red) quantifies how the electromagnetic field is coupled between the pin and the inside of the cavity. Therefore, we define the total quality factor of the filter:
+\begin{equation}
+Q_t = \dfrac{\omega_c}{\kappa_t}
+\end{equation}
+Likewise, we also define the internal quality factor $Q_i$ and the coupling quality factor $Q_c$.\\
+
+\begin{figure}[htbp]
+\centering
+\raisebox{0.5cm}{\includegraphics[height=4cm]{Figures/losses_cavity.pdf}}
+\hspace{0.5cm}
+\includegraphics[height=5cm]{Figures/3_regimes_theory.pdf}
+\caption{Left: Scattering parameters for a cavity in reflection. The signal enters ($a_{\rm{in}}$) and exits ($a_{\rm{out}}$) through the pin coupler (gray). Then, the pin is coupled to the cavity according to the coupling rate $\kappa_c$ (red). Since the cavity is not ideal, it has its own losses, grouped into a single internal loss rate $\kappa_i$ (black). Thus, the total loss rate of the cavity is defined as $\kappa_t = \kappa_i + \kappa_c$. Right: Plot of the three different coupling regimes (Amplitude and phase on the left, IQ plane on the right). For these plots: $\kappa_t=2\pi\times\SI{200}{\MHz}$ and $\kappa_c=2\pi\times\SI{70}{\MHz}$ (under-coupled, blue), $\kappa_c=2\pi\times\SI{100}{\MHz}$ (critically coupled, red), $\kappa_c=2\pi\times\SI{150}{\MHz}$ (over-coupled, green).}
+\label{fig:cavity_losses}
+\end{figure}
+
+Now, we have to distinguish three different regimes: the under-coupled regime, where internal losses exceed the coupling rate ($\kappa_c < \kappa_i$); the critical regime, where the two types of losses match perfectly ($\kappa_c = \kappa_i$); and finally the over-coupled regime, where the coupling rate is larger than the losses of the cavity ($\kappa_c > \kappa_i$). 
+
+These three different regimes are represented in Figure \ref{fig:cavity_losses}. Looking at the amplitude plot, we note that the critical regime gives us the biggest attenuation (red plot), which fulfills one of the requirements for the filter.
+This regime is reached thanks to the movable pin. Indeed, the rotation and translation allow us to change the coupling rate such that $\kappa_c = \kappa_i$, since $\kappa_i$ is more or less constant at constant cavity length. A convenient way to determine whether the cavity is critically coupled or not is to represent $S_{11}$ in the complex plane (or IQ plane). For a linear cavity it traces a circle, and the question is whether the origin of the plane is inside or outside the circle. In the particular case where the circle perfectly crosses the origin, it means that the cavity is critically coupled (Figure \ref{fig:cavity_losses}).\\
+ 
+Furthermore, we seek a very narrow resonance dip. The bandwidth of this dip corresponds to the total losses. We have $\kappa_t / 2\pi = FWHM$ (Full Width at Half Maximum), which corresponds to the width at $\SI{-3}{\decibel}$. As discussed before, we do not want to filter the signal at the RSB frequency, which is from the filter frequency by $\Omega_m$. Thus, in an ideal situation: $\kappa_t  < \Omega_m$.\\
+For example, with $\omega_c = 2\pi\times\SI{9.3}{\GHz}$ and $\Omega_m=2\pi\times\SI{1.2}{\MHz}$ (corresponding to the sample fabricated by S. Meilof in the group), we can calculate the corresponding quality factor: $Q_t=\num{7750}$. By comparison, the theoretical maximum value is $Q_{\rm{t, max}} = \num{17550}$ at the critical regime (from \textcite{pozar_microwave_2012}, see Appendix \ref{apx:max_Q}).
+
+\subsection{Cavity and TEM-mode theory}
+\label{sec:cavity_theory}
+
+The filter acts as a microwave resonant cavity, therefore, it has its own eigenmodes. These eigenmodes are discriminated according to the structure of the electric field and magnetic field and we distinguish two types of mode in the cavity: Transverse Electric (TE) modes which have no electric field along the $z$-axis of the cavity, while Transverse Magnetic (TM) modes have no magnetic field along the same axis. Furthermore, each mode is labelled by three indices: $n$ (azimuthal index), $l$ (radial index) and $m$ (longitudinal index). With the type of mode and the indices, we can completely describe the structure of the electromagnetic field in the cavity. For example, Figure \ref{fig:TEM_plot} shows two modes: one electric mode (TE$_{114}$) and one magnetic mode (TM$_{012}$). These plots are from simulations using \textit{Ansys HFSS}. More details are provided in Section \ref{sec:simulations}.\\
+
+Crucial information we need to know before implementing this filter is accessible frequencies, which depend on the geometry of the cavity, and the excited mode. Fortunately, the geometry of the filter is relatively simple: it is a copper cylinder, with a radius $R=\SI{25}{\mm}$ and an adjustable length $L=\qtyrange[range-phrase=-]{63}{113}{\mm}$. Thus, neglecting the small resistivity of copper, we can compute the frequency of each eigenmode (for a given length) \cite{checchin_analytic_2016}:
+
+\begin{equation}
+\label{eqn:TEM_freq}
+    \omega_{nlm} = c\sqrt{\left(\dfrac{\alpha_{nl}}{R}\right)^2 + \left(\dfrac{m\pi}{L}\right)^2}
+\end{equation}
+where $c$ is the speed of light, $\alpha_{nl}$ the l-th zero of $J_n$ (n-th order Bessel function of the first kind) for TM modes, or of $J'_n$ (the derivative of $J_n$) for TE modes. Zeros of Bessel functions appear in Equation \ref{eqn:TEM_freq} because of the cylindrical symmetry of the cavity.\\
+The geometry ($R$, $L$) and the electromagnetic eigenmode ($\alpha_{nl}$, $m$) simultaneously influence achievable frequencies of the filter $\omega_{nlm}$. By changing the cavity length with a movable piston, it is possible to tune the frequency of the cavity, which is exactly what we need.
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/Cavity_TEM.pdf}}
+\caption{Frequency map of the TE and TM modes with respect to the cavity length (using Eq. \ref{eqn:TEM_freq}). The blue branches correspond to the TE modes, and the red branches correspond to the TM modes. Each mode is labeled with the following rule: $\rm{TE(M)}_{nlm}$ where $n$, $l$, $m$ are the indices defined in Eq. \ref{eqn:TEM_freq}.}
+\label{fig:TEM_map_theory}
+\end{figure}
+
+Using Equation \ref{eqn:TEM_freq}, we may plot the frequency map of the filter (Figure \ref{fig:TEM_map_theory}). With the parameters chosen above, the cavity offers an excellent coverage of frequencies between $\SI{4}{\GHz}$ and $\SI{8}{\GHz}$. There are modes above $\SI{8}{\GHz}$, but their number increases at high frequencies and the figure becomes less legible. \\
+Also, as advised by \textcite{joshi_automated_2021}, we must avoid mode crossings since the transfer function of the filter becomes more complicated and less predictable than a simple dip in amplitude. In this specific case, it may still be possible to filter the noise of the source, but the limitation will be the automated tuning of the filter to determine precisely the cavity frequency.
+
+
+\section{Simulations of electromagnetic modes}
+\label{sec:simulations}
+
+The first weeks of this internship were dedicated to simulations using \textit{Ansys HFSS (High-Frequency Structure Simulator)}. The idea was to understand the structure and the behavior of the electromagnetic field inside the cavity. These simulations were also conducted to investigate the influence of the pin coupler, particularly as a function of its shape and its dimensions. Indeed, the reference paper did not provide any details about this crucial part of the filter, except that it was an asymmetrical pin such that the rotation of the latter changes the coupling rate $\kappa_c$.
+
+\subsection{Eigenmodes for an empty cavity}
+
+First and foremost, it is worth simulating eigenmodes of the cavity without a pin coupler. This is intended to see if simulations match the theory, and to plot these modes in 3D space. Therefore, Figure \ref{fig:TEM_plot} depicts two transverse modes from \textit{Ansys HFSS} simulations (one TE mode and one TM mode).
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/TE114.pdf}}
+\hspace{1cm}
+\centering{\includegraphics[height=5cm]{Figures/TM012.pdf}}
+\caption{Magnitude of the electric field in the cavity. Left: TE$_{114}$. Right: TM$_{012}$. Detailed information about the nomenclature of the modes is provided in the main text.}
+\label{fig:TEM_plot}
+\end{figure}
+
+Using these plots, we might develop an intuition of the nomenclature of eigenmodes and the role of each index:
+\begin{itemize}
+	\item $n$ (azimuthal index) represents the angular symmetry of the mode around the $z$-axis.
+	\item $l$ (radial index) describes the shape in the radial direction
+	\item $m$ (longitudinal index) corresponds to the number of half-wavelength field variations along the cavity axis.
+\end{itemize}
+For example, TE$_{114}$ (left plot of Figure \ref{fig:TEM_plot}) has four field lobes along the $z$-axis, and TM$_{012}$ (right plot) has two field lobes (considering periodic boundaries).\\
+
+In addition to these plots, simulations also provide the resonance frequency and the quality factor of each eigenmode. By varying the length of the cavity, it is possible to reproduce the frequency map of the filter (Figure \ref{fig:cavity_sim_eigenmodes}). One might notice a small gap between simulations (in black) and theory (red and blue) and it seems to correspond to a small variation of the radius of the cavity. Indeed, if we plot the theory map with $R=\SI{24.7}{\mm}$ (instead of $\SI{25}{\mm}$), the two plots overlap perfectly (not shown here).
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=7cm]{Figures/Cavity_map_eigenmodes.pdf}}
+\hspace{0.5cm}
+\centering{\includegraphics[height=7cm]{Figures/cavity_map_simulation.png}}
+\caption{Results from simulations. Left: Eigenmode simulation. Simulation data are in black, blue and red dots represent TE and TM modes, respectively. Right: Modal network simulation. It simulates the scattering matrix of the filter and the figure shows the amplitude of $S_{11}$ with respect to the cavity length and the frequency. In both figures, we note that both simulations agree with the theory. For eigenmode simulations, \textit{Ansys HFSS} computes the first 20 modes in ascending order of frequency, rather than by mode type. As a result, at higher frequencies, the mode branches are incomplete.}
+\label{fig:cavity_sim_eigenmodes}
+\end{figure}
+
+At first glance, we thought it came from the finite skin depth of the copper since the theory is for a lossless cavity. However, the calculation of this quantity at $\SI{4}{\GHz}$ for copper gives $\delta\approx\SI{1}{\micro\meter}$. Thus, this is not the source of the gap, and we finally conclude that it originates from the simulations but it remains an open question. For this project, small differences like that have little impact on subsequent results. Consequently, we did not pursue this investigation further.
+
+\subsection{Eigenmodes with a pin coupler}
+
+Following the results with an empty cavity, the next step was to add a small pin coupler in the cavity and then compare the field structure between this situation and the previous one. Figure \ref{fig:pin_design} shows the design of the copper cavity with a pin. The additional cavity (in blue) allows the field to leak through the dielectric around the pin. During weeks of simulations, several pin architectures were investigated, from a straight pin to different types of curves. In order to favor the understanding of this project, the pin shown here is the final design used during experiments.
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=7cm]{Figures/Pin_design.pdf}}
+\hspace{0.5cm}
+\centering{\includegraphics[height=7cm]{Figures/Q_collapse.pdf}}
+\caption{Left: Schematic of the cavity with a pin. There is an additional vacuum cavity at the top of the pin (in blue) so that a $\SI{50}{\ohm}$ boundary can be defined between this small vacuum cavity and the dielectric. Thus, the field can leak through the dielectric around the pin. Right: Evolution of the frequencies and the quality factors for the first 9 eigenmodes with respect to the pin depth. TM modes are shown in brown, and TE modes in blue. The different shades assigned to each mode are only used to distinguish the branches and have no specific physical meaning.}
+\label{fig:pin_design}
+\end{figure}
+
+The presence of this pin directly influenced the shape of eigenmodes. Indeed, the pin is made of a conductive material, so boundary conditions change inside the cavity, leading to a change in the electromagnetic field.\\
+
+For noise filtering, we need a high-Q cavity, so it is worth plotting the evolution of this factor with respect to the presence of the pin. As a first approximation, one considered a straight pin, with different lengths (Figure \ref{fig:pin_design}). 
+
+By comparing with the theoretical frequencies, we identify each mode, such that TE modes are in blue and TM modes are in red. The bottom plot discriminates these two families of modes, where the quality factor remains more or less constant for electric modes, but it drops sharply for magnetic modes.\\
+
+An explanation for this phenomenon is that TM modes have a non-zero electric field along $z$-axis, which will strongly interact with the straight pin (also along the $z$-axis), because of the boundary conditions imposed by the conducting pin. Hence, TM modes are largely over-coupled ($\kappa_c \gg \kappa_i$) which leads to a small $Q_t=\dfrac{1}{\kappa_c + \kappa_i}\approx\dfrac{1}{\kappa_c}$.
+
+Based on these observations, we conclude that we will use TE modes for filtering, rather than TM modes which is consistent with the results of \textcite{joshi_automated_2021}.
+
+\subsection{$S_{11}$ simulations}
+\label{sec:S11_sim}
+
+To conclude this simulation section, we switch from an \textit{Eigenmode} simulation to a \textit{Modal Network} simulation, still with \textit{Ansys HFSS}. Through this new approach, we defined the beginning of the pin coupler as an input port (and an output port also) for the field. The idea is to compute the scattering parameter $S_{11}$ of the filter, since it is the main parameter used to run the experiments.\\
+
+First, we start from a known mode (in this case TE$_{114}$ at $\SI{6.13}{\GHz}$) and we look at the electric field distribution inside the cavity to determine if it is possible to excite this mode. In the left plot of Figure \ref{fig:Scat_sim_TE114}, one distinguishes the structure of TE$_{114}$, so it gives us further confidence in our ability to excite electric modes. The right plot of the same figure confirms the presence of the mode thanks to the dip of $|S_{11}|$, and the $2\pi$ phase winding.\\
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/Excite_TE114_Pin.pdf}}
+\hspace{0.5cm}
+\centering{\includegraphics[height=5cm]{Figures/S_parameters_TE114.pdf}}
+\caption{Left: Plot of the magnitude of the electric field at $\SI{6.1375}{\GHz}$. We recognize the shape of TE$_{114}$ with its 4 field lobes. Right: Scattering parameter of this excitation. The $2\pi$ phase jump and the circle of the IQ plane confirm that the mode is largely over-coupled. That explains the very small dip of the amplitude ($\SI{1}{\decibel}$).}
+\label{fig:Scat_sim_TE114}
+\end{figure}
+
+As done previously for eigenmode simulations, we can run this simulation by sweeping the cavity length. This procedure gives the right plot of Figure \ref{fig:cavity_sim_eigenmodes}. To better distinguish every mode (TE and TM), the colorbar has been truncated.
+
+Once again, TE and TM modes have two different behaviors. Electric modes are narrower and deeper compared to the magnetic modes, which are broader due to their strong over-coupling.\\
+
+We also notice that for every simulation, modes are very over-coupled which should indicate a potential issue since this is not the type of coupling we required for filtering. However, this phenomenon is due to a pin coupler probably too thick compared to the pin we will use during our experiments. We could improve the pin shape during simulations, but it was preferable to switch to experiments rather than performing further simulations.
+
+\section{Experiments}
+
+After these simulations, we started experiments and measurements with the real filter. More details about Python scripts used to run measurements and analyze data are provided in Appendix \ref{apx:python}
+
+\subsection{Experimental setup}
+
+Figure \ref{fig:Exp_setup} shows the first experimental setup with the filter and the devices used to acquire data. In reality, there are two setups in the same one (represented with two different colors). In red, the setup consists of the filter and a VNA (Vector Network Analyser): it is used to measure $S_{21}$ of the filter to determine the filtered frequency. In blue, it consists of the filter, a microwave generator and a SA (Signal Analyser): this corresponds to the configuration used for ground-state cooling experiments. Thus, we may add a DUT (Device Under Test) between the output of the filter and the input of the SA. For these two different setups, the principle is the same: a microwave signal coming from a generator (or from a VNA) enters the cavity through a SMA cable (in blue, visible on the left of the picture \ref{fig:Exp_setup}) and pin coupler, interacts with the filter and then comes back to end up in a SA (or the second port of the VNA).
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/cavity_SAMW.pdf}}
+\hspace{0.5cm}
+\centering{\includegraphics[height=5cm]{Figures/Picture_Cavity.jpg}}
+\caption{Left: Schematic of the experiment. The setup is divided into two sub-configurations: one with a VNA to tune the cavity, and another one with a generator and a SA to measure the noise reduction provided by the filter. The dashed line in green corresponds to the reference plane once the SOL calibration has been performed (see Section \ref{sec:noise_fitlering}). Right: Picture of the cavity. From left to right: SMA cable (in blue), copper cavity, and piston attached to a linear stage to change the cavity length. The VNA, the SA and the generator are not visible.}
+\label{fig:Exp_setup}
+\end{figure}
+
+From this point onward, all measurements are performed using $S_{21}$, instead of $S_{11}$ as done previously. The reason is we need a circulator for the everyday use of the filter (Generator + SA), so we also use a circulator for VNA measurements since it was easier to manage the experimental setup.\\
+
+Figure \ref{fig:Pin} provides details of the pin coupler, such as the shape, how it moves (rotation and translation) and how it is fixed to the copper cavity. During the first measurements, we noted that it is mandatory to tighten all screws as much as possible to have the best electrical contacts and to avoid grounding issues between the pin and the cavity. More pictures of the filter are provided in appendix \ref{apx:pict_filter}.\\
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[b]{0.31\textwidth}
+    \centering
+    \includegraphics[height=2.9cm, keepaspectratio]{Figures/pin_alone.png} \\[0.2cm]
+    \includegraphics[height=2.9cm, keepaspectratio]{Figures/all_no_cav.png}
+  \end{minipage}
+  \hspace{0.2cm}
+  \begin{minipage}[b]{0.31\textwidth}
+    \centering
+    \includegraphics[height=6cm, keepaspectratio]{Figures/Zoom_rotation_pin.png}
+  \end{minipage}
+  \hspace{0.2cm}
+  \begin{minipage}[b]{0.31\textwidth}
+    \centering
+    \includegraphics[height=6cm, keepaspectratio]{Figures/Pin_montage.png}
+  \end{minipage}
+  \caption{Pictures of the pin. \textbf{(a)} Shape of the pin: a straight part to overcouple magnetic modes, and a small curved part such that the rotation of the pin changes the coupling rate. \textbf{(b)} Cross-section of the pin, the aluminum cylinder and the steel plate. The aluminum cylinder can rotate in the copper ring. \textbf{(c)} Detailed view of the pin and its solder cup attachment to the aluminum cylinder. \textbf{(d)} Global view of all the pin parts once attached to the cavity. Two stop screws are used to fix the position of the aluminium cylinder (and, by extension, of the pin coupler).}
+  \label{fig:Pin}
+\end{figure}
+
+The first measurement done with the filter was its map, in order to reproduce the results obtained with the theory and the simulations. Therefore, by sweeping the filter length with a micrometer linear stage (in black on the right of \ref{fig:Exp_setup}) and measuring $S_{21}$ for each motor step, we finally plot the filter map (Figure \ref{fig:Cavity_Map_Exp}). Compared to the theory map (Figure \ref{fig:TEM_map_theory}), we obtained a similar map, where we see TE modes (sharpest branches) and TM modes (widest branches).
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=7cm]{Figures/Cavity_Map_Exp.png}}
+\caption{Experimental data of the amplitude of $S_{11}$ with respect to the frequency and the cavity length. Data acquired with a non-optimized shape for the pin coupler: TM modes are clearly visible and TE modes are not as sharp as they could be. Above $\SI{7}{\GHz}$, the number of modes increases with the frequency, and the coupling between the modes complicates the overall behavior of the system.}
+\label{fig:Cavity_Map_Exp}
+\end{figure}
+
+Above $\SI{7}{\GHz}$, because of an increasing density of modes and interactions between each mode, branches are less distinguishable. Initially, it appears impossible to use the filter above this frequency, but we discovered later that we were able to tune the filter at frequencies around $\SI{9}{\GHz}$.
+
+This plot is useful to compare the theory and experimental data, but for the automated tuning discussed in section \ref{sec:automatic_tuning}, such an extensive map is not necessary, since we will focus only on a small frequency span around the desired frequency ($\approx\SI{100}{\MHz}$).
+
+\subsection{Over-coupling of magnetic modes}
+
+One point previously mentioned during simulations is the behavior of magnetic modes with the presence of a straight pin. We found that TM modes are largely over-coupled. During the multiple tunings of the filter, we observed this behavior (Figure \ref{fig:TM_overcoupled}).\\
+
+From the colormap plot, we note several things. Firstly, there is a wavy background with a disruption around $\SI{92}{\mm}$. These ripples are the consequence of an impedance mismatch of the pin coupler, leading to the presence of standing waves in the cables between the filter and the VNA. Secondly, we distinguish two very sharp eigenmodes at $\SI{67}{\mm}$ and $\SI{103}{\mm}$. These are electric modes (more specifically TE$_{112}$ and TE$_{113}$ after identification).\\
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/TM_overcoupled}}
+\caption{Left: Cavity map around $\SI{5.62}{\GHz}$. The pin shape was optimized to obtain two critically-coupled TE modes (around $\SI{68}{\mm}$ and $\SI{103}{\mm}$). Right: Plot of three different cross-sections. One corresponds to an over-coupled TM mode (pink), a second one to a TE mode (blue), and the last one to the global background (green). Detailed information about these cross-sections is provided in the main text.}
+\label{fig:TM_overcoupled}
+\end{figure}
+
+If we confront the theory with this colormap, we understand that deviations of the ripples are in fact a magnetic mode (TM$_{012}$). The two right plots of Figure \ref{fig:TM_overcoupled} depict three cross-sections of the map at different lengths. The idea is to compare TE and TM modes to the background. The electric mode (upper plot) is clearly visible compared to the ripples, while the magnetic mode (lower plot) is just a perturbation without a dip in amplitude.
+
+Thus, if a crossing occurs between this TM mode and a TE mode (like TE$_{113}$), we may think that the electric mode can still be used for filtering. The consequences are that some frequencies we thought impossible to filter with this cavity (because of the presence of a mode crossing) are now achievable, under at least two conditions. It must be a crossing between a magnetic mode and an electric mode since the situation depicted above remains difficult to achieve with two electric modes. Moreover, the magnetic mode must be strongly over-coupled such that the dip in amplitude of the TE mode is not significantly affected.
+
+Unfortunately, we were not given more time to check this affirmation  since it wasn't our main objective at this time. It might be interesting to go into this in depth in the future to confirm it (or not).
+
+\subsection{Automated tuning of the filter}
+\label{sec:automatic_tuning}
+
+The second main objective of this internship after the implementation of the filter was to create an automated routine to tune the filter to (almost) any frequency.
+
+The tuning procedure is divided into four main steps. During the tuning process, only a VNA is used for characterization. Since the objective is to optimize the filter for ground-state cooling experiments, the filter resonance is tuned to match the cavity frequency. Therefore, the target frequency is $\omega_c$.\\
+
+Before running the automation script, it is recommended to take a look at the eigenmodes. Using the filter map (either from the theory (Figure \ref{fig:TEM_map_theory}) or experiments (Figure \ref{fig:Cavity_Map_Exp})), one estimates the usable lengths of the filter, and then manually checks the shape and the coupling of electric modes. It is also the ideal time to make a first optimization of the pin shape and its position to have a good coupling.
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/Auto_tune_res.pdf}}
+\caption{Results from the mode fits of Figure \ref{fig:TM_overcoupled} used for the automated tuning of the filter. Left: Fitted frequency with respect to cavity length. It reproduces the two  visible TE modes of Figure \ref{fig:TM_overcoupled}. Right: $\kappa_t$ of each mode with respect to the frequency. It helps to choose a good mode for the automated tuning. The dispersion at low frequency is a result of a poor fit.}
+\label{fig:Auto_tuning}
+\end{figure}
+
+\begin{enumerate}
+	\item The first step is to perform a mapping of eigenmodes around $\omega_c$. To do so, one runs a full sweep of the filter length between $\omega_c - \Delta\omega/2$ and $\omega_c + \Delta\omega/2$ (with $\Delta\omega \approx 2\pi\times\SI{100}{\MHz}$). At the end, we obtain a map like Figure \ref{fig:TM_overcoupled}.
+	\item Then, we overlay the theory and the map to identify electric modes (not shown here). Thanks to the theory, we locate each point and we easily run a fit of branches. This routine only fits TE modes (since we do not use TM modes). Results of these fits give us the resonance frequency, and the quality factor (or $\kappa_t$) of each point. Figure \ref{fig:Auto_tuning} shows the fits of the previous filter map; the two TE modes can be identified on the left plot. The right plot helps us to determine $\kappa_t$ of each mode and then to select the best one for the rest of the automation. For example, TE$_{113}$ (in orange) has very small total losses ($\kappa_t < \SI{1}{\MHz}$), so we will continue with this mode.
+	\item After selecting one mode, the algorithm determines the starting length for the motor. Thanks to the small frequency span, it approximates each branch with a linear fit. Therefore, given the frequency $\omega_c$, the algorithm provides a good first guess of the filter length. Furthermore, the slope value $\gamma$ (in $\si{\GHz\per\mm}$) is crucial for the next step.
+	\item Finally, the last step is a loop that refines the filter frequency. It measures the current filter frequency ($\omega_{\rm{filter}}$) and computes the error: $\omega_{\rm{error}} = \omega_{\rm{filter}} - \omega_c$. Afterwards, using $\gamma$, it converts this frequency error into a length correction for the motor. In the meantime, one adds a small gain $G=0.9$ to the correction to avoid the backlash of the motor (see Appendix \ref{apx:backlash} for details). So, the final correction is $\Delta L = G\times\dfrac{\omega_{\rm{error}}}{2\pi\gamma}$. The loop continues until the error is smaller than a given threshold (usually $\SI{5}{\kHz}$).
+\end{enumerate}
+
+In the end, it is important to check the results of the algorithm by plotting $S_{21}$ (Figure \ref{fig:Last_VNA}).
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/Last_VNA_no_edelay.pdf}}
+\caption{$S_{11}$ response of the filter after the tuning process. Left: $|S_{11}|$ in $\si{\decibel}$. The filter is tuned at the frequency of the superconducting cavity (green), while the pump signal is sent at the red sideband frequency (red). Right: Representation in the IQ plane. The circle crosses the center of the plane meaning that the filter is critically coupled.}
+\label{fig:Last_VNA}
+\end{figure}
+
+With this plot, we can simultaneously check the shape of the resonance (only one resonance should be observable), confirm that the filter frequency corresponds to the cavity frequency (green line), and finally take a look at the coupling regime. As said in the theory section, we need a critically coupled mode to have the strongest attenuation, and the most appropriate way to achieve this is to plot $S_{21}$ in the IQ plane (right plot). For this example, the trace crosses the origin, which means we are at the desired regime.\\
+
+Finally, we may compute the total losses $\kappa_t$ by fitting $S_{21}$. For data shown in Figure \ref{fig:Last_VNA}: $\kappa_t=2\pi\times\SI{752}{\kHz}$ at $\omega_c=2\pi\times\SI{5.616}{\GHz}$. This is an excellent mode, since it is the smallest $\kappa_t$ reached with this filter during the internship, and one of the highest quality factors: $Q_t=7468$. To compare, the maximum $Q_t$ achievable at the critical regime is $Q_t=12988$ (Appendix \ref{apx:max_Q}). More generally, optimizing the pin shape and position leads to modes around $\kappa_t=2\pi\times\SI{1.5}{\MHz}$.\\ 
+
+One last question about this automation is the value of the threshold to define the convergence: why $\SI{5}{\kHz}$ and not a smaller value? In the experimental setup, the limiting factor is the motor. Even though it is designed to achieve very small length steps, it has a limited accuracy.
+
+For this motor, the smallest step possible is approximately $\SI{50}{\nm}$, and if we convert this value into frequency using $\gamma$, we obtain $\Delta\omega_{\rm{min}}=2\pi\times\SI{1.8}{\kHz}$ (for TE$_{113}$ from previous example). That is why there is no reason to choose a smaller threshold. 
+
+Moreover, the resonance frequency is not stable with respect to time (see Section \ref{sec:evolution}) so it is not worth choosing an infinitely small threshold.
+
+\subsection{Stability of the filter}
+\label{sec:evolution}
+
+One of the drawbacks of this type of filter is its high sensitivity to temperature. The filter is a massive block of copper of several kilograms, and copper has a non-negligible thermal expansion coefficient ($\alpha=\SI{17e-6}{\per\kelvin}$). Consequently, the dimensions of the cavity ($R$ and $L$) change as a function of the temperature of the lab (even if the latter is air-conditioned).
+
+To quantify the frequency shift, we measured the filter frequency during one weekend (from Friday afternoon to Monday morning) (Figure \ref{fig:long_time}). 
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/long_time_evolution}}
+\caption{Evolution of the filter frequency over a weekend. For the two measurements, the AC was turned off and the windows were open. Blue trace: free evolution of the filter. Red trace: same measurement in the same conditions (the next weekend), but the filter is tuned before each measurement. The background of the plot corresponds to day and night, from Friday afternoon to Monday morning.}
+\label{fig:long_time}
+\end{figure}
+
+The maximum shift measured is $\SI{300}{\kHz}$ which is important compared to the mechanical frequency of the samples in the group ($\qtyrange[range-phrase=-]{1.0}{2.5}{\MHz}$). Furthermore, the evolution is not random: it follows the curve of a day.
+
+During the day, the temperature in the lab increases, which causes the filter to expand. According to Equation \ref{eqn:TEM_freq}, it entails a decrease of the resonance frequency. Conversely, during the night, we see an increase of the filter frequency due to the opposite phenomenon.\\
+
+This behavior has also been reported by \textcite{youssefi_squeezed_2023}, who proposed to add a microwave switch to their experimental setup in order to retune the filter from time to time. This is particularly useful when we have to run long measurements (such as thermal peak measurements we will discuss in section \ref{sec:GScooling}).
+
+So, we performed the same measurement the next weekend, but instead of a uncontrolled evolution of the filter, it was retuned before each measurement (red trace). Compared to the free evolution, the resonance frequency is more stable: we no longer see an evolution correlated with the day/night cycle.
+
+\subsection{Noise filtering}
+\label{sec:noise_fitlering}
+
+Once the filter is tuned, it is time to switch to the second experimental setup (with the microwave generator and the SA) to finally observe the role of the filter. This new setup is very close to the final configuration where it will be used. The only difference for now is the absence of a DUT.\\
+
+The filter is tuned at the cavity frequency $\omega_c$ and the generator sends a signal at the red sideband frequency $\omega_{\rm{RSB}}$, $\SI{2.06}{\MHz}$ away from the cavity\footnote{During the internship, the filter has been tuned for different cavity frequencies since we had to change mechanical samples several time because of unexpected events. Therefore, the cavity frequency and the mechanical frequency might change from a section to an other.}. Then, we measure the PSD of the source with or without the filter. Figure \ref{fig:SA_atten} shows these two plots, and also the background of the SA.\\
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/PSD_source.pdf}}
+\hspace{0.5cm}
+\centering{\includegraphics[height=5cm]{Figures/PSD_source_zoom.pdf}}
+\caption{Left: Power Spectral Density (PSD) of the microwave generator with (red) or without (blue) the filter. The background noise of the Signal Analyser (SA) is plotted in gray. Right: Zoom of the PSDs around the cavity frequency. The noise reduction provided by the filter is visible at $\SI{2}{\MHz}$.}
+\label{fig:SA_atten}
+\end{figure}
+
+First of all, the blue trace gives us an overview of the source noise. Since we used low-noise generators, it was necessary to apply strong input power ($\SI{15}{\dBm}=\SI{32}{\mW}$) to be able to resolve the noise with the SA. To illustrate the very low power level of the measured signal: $\SI{1e-15}{\volt\tothe{2}\per\Hz}=\SI{20}{\atto\W\per\Hz}$ (with a $\SI{50}{\ohm}$ input).
+
+For each measurement, we note a sharp dip at exactly $\SI{1}{\MHz}$: It corresponds to the center frequency of the SA. The SA cannot directly measure a signal at $\si{\GHz}$ frequencies so it uses a mixer and a Local Oscillator (LO) to convert the signal to smaller frequencies ($\sim\si{\MHz}$). Unfortunately, this mixer is not perfect and the sharpest peak is a leakage of this LO signal in the mixer. As for the other peak at $\SI{3.50}{\MHz}$, its origin remains unclear. Since this value does not change while the LO frequency changes, we concluded it is an internal behavior of the SA.
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/Ratio_VNA.pdf}}
+\caption{In green: Ratio of the two PSD traces (see Figure \ref{fig:SA_atten}). A ratio of 1 means that the signal is unaffected by the filter. This new trace is overlaid with two VNA traces. In red: uncalibrated VNA trace with a $\SI{10}{\dB}$ offset applied to match the purple trace. In purple: VNA trace after the SOL calibration to move the reference plane between the circulator and the filter, without any added offset.}
+\label{fig:Ratio_VNA}
+\end{figure}
+
+Despite the global attenuation of the PSD because of the filter ($\approx\num{0.5}$), we see that around $\omega_m$ there is a dip, shown by the ratio of the two PSDs (Figure \ref{fig:Ratio_VNA}). The filter attenuates the source noise by a factor of $\approx 10$.
+
+This attenuation may appear disappointing compared to the initial attenuation measures with the VNA. In fact, the VNA measurements are partially wrong, and to measure the real $S_{21}$, we must perform a SOL calibration (Short-Open-Load), in order to place the reference plane of the VNA as close as possible to the filter (see Appendix \ref{apx:SOL}), and thus after the circulator \cite{rytting_network_nodate}. The role of a SOL calibration is to take into account all the imperfections of the components between the VNA and the new reference plane such as finite isolation of the circulator or defects in the cables (Figure \ref{fig:Exp_setup} shows where the reference plane is after the calibration, in green). This calibration is crucial because it allows us to have the true performance of the filter when it is added to a larger experimental setup.\\
+
+Once this calibration is done, we finally have a more realistic value of $S_{21}$. Figure \ref{fig:Ratio_VNA} shows the difference of the two VNA traces, and compares them to the ratio of the two PSDs. The purple trace, corresponding to the calibrated VNA response, does not perfectly match the green trace, but it remains better than the red trace (uncalibrated response). A first explanation for this remaining gap is that the SOL calibration corrects only a part of the imperfections of the experimental setup. Furthermore, the absence of any need for an offset on the calibrated VNA trace already demonstrates the effectiveness of the calibration.
+
+
+\section{Ground-state cooling}
+\label{sec:GScooling}
+
+\subsection{Operating principle}
+
+Based on the previous results, the filter can now be tested under real operating conditions: sideband cooling of mechanical resonator. The aim is to measure the thermal occupancy of the resonator while applying a pump on the red sideband with or without the filter.  Measurements were run after a tuning of the filter (Figure \ref{fig:ev_after_meas}) following the process described in section \ref{sec:automatic_tuning}. Then, the experimental setup follows Figure \ref{fig:Exp_setup} (blue path). The DUT corresponds to the mechanical resonator, and all components located between the sample and room-temperature outputs of the cryostat. Pictures of the measurement setup and the inside of the dilution refrigerator are provided in Appendices \ref{apx:pict_exp} and \ref{apx:pict_fridge}.
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/Small_evolution.pdf}}
+\caption{$S_{21}$ measurements of the superconducting cavity coupled to the mechanical resonator (red), and of the filter (blue). The frequency axis is centered on the cavity frequency. Left: $|S_{21}|$ with a large frequency span. The two small dips of the cavity response correspond to the mechanics driven at the blue sideband (and its first harmonic). This can be useful to make a first approximation of the mechanical frequency. Right: Detailed view of the left plot around the resonance (gray box).  Before the thermal peak measurement (solid blue line), the cavity and the filter are tuned at the same frequency. After the measurement (dashed blue line), the filter frequency shifted by approximately $\SI{20}{\kHz}$.}
+\label{fig:ev_after_meas}
+\end{figure}
+
+The principle of sideband cooling, as described in the introduction, is to apply a pump signal at $\omega_{RSB}$ in order to remove phonons from the mechanics, and therefore cool the sample. Meanwhile, the mechanical resonator is continuously reheated by the thermal bath of the cryostat, so sideband cooling must overcome this thermal heating. The efficiency of the cooling is given by the thermal cooperativity $\mathcal{C}_{th}\propto\dfrac{P_{\rm{RSB}}}{n_{th}}$, with $P_{\rm{RSB}}$ the input power and $n_{th}$ the thermal phonon occupation ($n_{th}\approx 138$ at $T=\SI{10}{\milli\kelvin}$). $\mathcal{C}_{\rm{th}}$ is a dimensionless parameter that quantifies the ability of the optomechanical cooling process to overcome thermal decoherence by comparing the cooling strength to the thermal occupation. 
+
+This is why increasing the RSB drive power, and hence the cooperativity, is necessary to counteract the natural re-excitation, and reach ground state.\\
+
+Secondly, we need a method to measure the mechanical thermal phonon occupancy. To do so, we measure the PSD of the DUT around $\omega_{RSB} + \Omega_m$. Indeed, the motion of the mechanical resonator generated two sidebands around the drive frequency at $\pm\Omega_m$, and the area under these thermal peaks (referred to as sidebands) is proportional to the thermal occupancy of the mechanics (Figure \ref{fig:gscooling}).
+
+\subsection{Experimental results}
+
+To evaluate the effect of the filter on ground-state cooling, we must compare the thermal occupation (i.e. the integral of the thermal peak) with respect to the drive power (Figure \ref{fig:gscooling}). Nevertheless, we must pay attention to the effective drive power going in the DUT. We noted in Figure \ref{fig:Ratio_VNA} that the filter slightly attenuates all frequencies (including the RSB drive frequency). Thus, it is necessary to counterbalance this effect by increasing the drive power. The compensation was determined by measuring the power spectrum of the generator after the DUT: if the two output powers (with and without the filter) match after the sample, it signifies that the input powers are also identical.\\
+
+\begin{figure}[htbp]
+\centering{\includegraphics[height=5cm]{Figures/thermal_peak.pdf}}
+\hspace{0.5cm}
+\centering{\includegraphics[height=5cm]{Figures/GS_cooling.pdf}}
+\caption{Left: Example of a thermal peak and the Lorentzian fit, with a drive power of $\SI{-9.58}{\dBm}$. The frequency axis is centered on the cavity frequency. For the fit, we subtracted the background ($\approx\SI{45}{\atto\watt\per\Hz}$) but this correction was not applied to this plot in order to display the raw thermal peak measurement. Right: Results from sideband cooling. The area of the thermal peaks is rescaled with respect to the input power $P_{\rm{in}}$. The final result is proportional to the phonon occupancy of the mechanics. }
+\label{fig:gscooling}
+\end{figure}
+
+According to the theory, we know that the thermal peak is a Lorentzian. Therefore, after removing the background of $S_{VV}$, we can fit the data, and then compute the area under the  peak. Then, we must divide the result by the input power (in $\si{\W}$), which is proportional to the number of photons in the cavity, and finally trace the evolution with respect to the drive power (Figure \ref{fig:gscooling}).
+
+First, for both curves, we see a decrease in the mechanical occupation with increasing drive power, which is the expected behavior for ground-state cooling. A second important observation here is the lower phonon occupation of the mechanics for a given drive power. Since the input power was carefully calibrated, the intracavity photon number remained the same for both measurements. The improved phonon occupancy of the sample can thus be attributed to the action of the filter around the cavity frequency. By reducing the detrimental contribution of the noise, as described in the introduction, the filter improves the overall efficiency of sideband cooling. Consequently, the mechanical resonator reaches a lower phonon occupation for the same input power. The possibility of reaching similar cooling performance with lower drive power is particularly relevant, since it limits the risk of entering a nonlinear regime which could prevent us from achieving ground-state cooling (more details are provided in Section \ref{sec:limitations}).
+
+
+\subsection{Limitations and future improvements}
+\label{sec:limitations}
+
+Unfortunately, it is difficult to confirm with certainty the effectiveness of the filter, regarding the reliability of the measurements. In fact, several elements must be taken into account.\\
+
+Firstly, this dataset is the only one showing a cooling effect and a non-negligible effect of the filter. Due to different issues with the dilution refrigerator and the samples, we could not perform this measurement on the same resonator a second time.\\ 
+Secondly, the compensation of the input power was not optimal since the correction was considered the same for every drive power.\\
+Thirdly, it is impossible to provide an absolute value for the number of phonons in the resonator. This requires a thermal calibration of the cryostat which takes several weeks to do.\\ %However we can make a rough estimation of the variation in the phonon number based on a reference drive power.
+Moreover, as shown by Figure \ref{fig:ev_after_meas}, the filter frequency drifts with time, leading to a variation of the efficiency of the filter during the measurement. To give an order of magnitude, the thermal peak measurement takes approximately one hour.\\
+
+Another important element is the input drive power of the RSB pump: we are limited both at low and high power. On the one hand, at low drive power, data seem noisier compared to the same plot at high power. We may explain this phenomenon because of the size of the thermal peak. Below $\SI{-20}{\dBm}$, the drive power is too small to reach the necessary sensitivity to measure a thermal peak, exceeded by the background. On the other hand, at high drive power, the resonator approaches the strong-coupling regime \cite{groeblacher_observation_2009}: the thermal peak splits into two different peaks, leading to the impossibility to fit a single Lorentzian.\\
+
+As a result, we can make some suggestions to improve the cooling measurement routine. Firstly, during measurements without the filter, record the power spectrum of the RSB pump for every drive power. Secondly, when the filter is added, repeat the same measurement and then compensate the drive power (still for every drive power). Thirdly, once the drive power is adjusted, measure the cavity frequency while the RSB pump is on. Indeed, nonlinear effects can appear resulting in a shift of the frequency. Finally, using the previous measurement, we are able to retune the filter precisely to the cavity frequency.\\
+
+Other suggestions will not be discussed, such as introducing a feedback loop to set the drive frequency exactly on the red sideband if the cavity moves \cite{rossi_enhancing_2017}, since they are not directly related to the use of the filter, but more to a general improvement of ground-state cooling.
+
+
+\section{Conclusion}
+
+This internship aimed to replicate the design of a high-Q tunable microwave filter, intended to be implemented in optomechanical experiments in the SteeleLab. This filter is designed to reduce the phase noise of a microwave source in order to improve sideband cooling performances of a micromechanical resonator. The work is part of a broader project which aims to push the limits of optomechanics, and in the future explore gravitational effects at the quantum scale.\\
+
+The first weeks of the internship were dedicated to the validation of the filter design, using \textit{Ansys HFSS} electromagnetic simulations. These simulations allowed us to characterize the eigenmodes of the copper cavity, and understand the influence of the pin geometry on the coupling strength. In particular, we showed that TE modes were the best candidates for meeting all the required specifications, such as a strong attenuation ($>\SI{30}{\decibel}$) over a small frequency range ($<\SI{1.5}{\MHz}$).
+
+The first experimental measurements confirmed the results from the theory and the simulations. Despite all the difficulties encountered to optimize the pin geometry and its position in the cavity, the final performance of the filter was quite satisfactory, with quality factors above $\num{7e3}$ and a total loss rate below $\SI{1}{\MHz}$. The main achievement of the internship was the development of an algorithm to automatically tune the filter on almost any frequency between $\SI{4}{\GHz}$ and $\SI{12}{\GHz}$. Throughout several weeks of measurements, the algorithm and the filter demonstrated their robustness, which in particular allowed us to adapt quickly to the numerous mechanical resonator changes resulting from experimental conditions. Indeed, multiple issues such as damaged mechanical drums after a thermal cycle, or insufficient output power to measure thermal peaks forced these multiple adaptations.\\
+
+Thanks to this automation, it was possible to measure the performance of the filter under experimental conditions similar to those used for ground-state cooling. Despite the high attenuation measured with the VNA, phase-noise reduction measurements showed limited performance due to the components (circulators, cables, etc.) partially characterized by the SOL calibration of the VNA. The effective attenuation was around $10$ to $\SI{15}{\decibel}$, compared with the $\SI{30}{\decibel}$ measured by the VNA without any calibration. Finally, the filter was implemented in a sideband cooling setup to evaluate its efficiency. First results suggest a beneficial effect of the filter, even though some uncertainty remains and the limitations of the experimental setup prevented us from precisely quantifying its benefits. Furthermore, we were not able to achieve ground-state cooling because of the lack of fully characterized samples in the cryostat.
+
+These measurements also helped identify several areas for improvement to support the project's continuation. Some of them directly affect the filter design, in particular the adjustment of the pin coupler, which remains challenging, while others concern the implementation into the whole setup. For example, adding feedback loops to keep the filter tuned at the cavity frequency, or to ensure driving exactly at the red sideband would help counterbalance drifts and nonlinear effects at high drive power. This internship laid the groundwork for future experiments, but many improvements remain to be made.\\
+
+Overall, this internship demonstrated the feasibility of a tunable microwave filter fulfilling all the requirements for optomechanical experiments performed in the lab. Beyond the achieved performance, the development of a Python library dedicated to the control and automated tuning of the filter constitutes an important result, since it enables a user-friendly implementation of the filter for experimental setups in the SteeleLab. Thus, it is not necessary to have in-depth knowledge of the filter physics for everyday use.\\
+
+On a more personal note, this internship was a particularly rewarding experience, both scientifically and personally. For a second internship in experimental quantum physics, I had the opportunity to lead a project from the initial design to its implementation in real experiments. This independence allowed me to acquire a global insight into the development, while deepening my knowledge in optomechanics, microwave instrumentation, dilution refrigerators and Python programming. Not only do technical skills matter, but I also appreciate working within the group, where a stimulating work environment largely contributes to making this internship a truly educational experience.
+
+The results obtained during this internship represent a promising step for the future development of the project. Even though the path toward observing gravitational effects at the quantum scale remains a distant goal, I hope that the tools developed and the new results will contribute, even in a modest way, to advancing research in this field.
+
+\vspace{1cm}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=3cm]{Logo/TUDelft_Old.png}
+\end{figure}
+
+\newpage
+
+\printbibliography
+\addcontentsline{toc}{section}{References}
+
+\newpage
+\appendix
+
+\section{Optomechanical damping $\Gamma_{\rm{opt}}$}
+\label{apx:gamma_opt}
+
+Figure \ref{fig:sideband_cooling} shows in the background the optomechanical damping with respect to the frequency and the intracavity photon number.\\
+
+First, the input power ($P_{\rm{in}}$ in $\si{\W}$, right y-axis) is converted into the mean intracavity photon number:
+\begin{equation}
+n_c = \dfrac{\kappa_c \left(P_{\rm{in}}\times 10^{-\mathcal{A}/10}\right)}{\hbar\omega_d\left(\Delta^2 + (\kappa_t / 2)^2\right)}
+\end{equation}
+with $\kappa_t$ and $\kappa_c$ being respectively the total and coupling losses of the cavity, $\omega_d=\omega_c - \Omega_m$ the pump frequency, $\Delta=\omega_d - \omega_c = -\Omega_m$ the detuning of the pump, and $\mathcal{A}$ the input attenuation from room temperature to the mixing chamber.\\
+
+Then, we can compute the optomechanical damping:
+\begin{equation}
+\Gamma_{\rm{opt}} = g^2\left(\dfrac{\kappa}{(\Delta+\Omega_m)^2+(\kappa/2)^2} - \dfrac{\kappa}{(\Delta-\Omega_m)^2+(\kappa / 2)^2}\right)
+\end{equation}
+with
+\begin{equation}
+\label{eq:g0}
+g = g_{0}\sqrt{n_c},
+\end{equation}
+
+Here, $g_0$ is the single-photon optomechanical coupling strength. Physically, $g_0$ measures how strongly a single intracavity photon interacts with the mechanical resonator through radiation pressure. Because this interaction is very weak ($g_0\sim2\pi\times\SI{10}{\Hz}$), experiments typically rely on a strong coherent drive to populate the cavity with many photons. The interaction is then enhanced, yielding the linearized coupling strength (Eq. \ref{eq:g0}).\\
+
+For Figure \ref{fig:sideband_cooling}: $\omega_c=2\pi\times\SI{5.6}{\GHz}$, $\Omega_m=2\pi\times\SI{1.5}{\MHz}$, $\kappa_t=2\pi\times\SI{52}{\kHz}$, $\kappa_c=2\pi\times\SI{23}{\kHz}$, $g_0=2\pi\times\SI{10}{\Hz}$, $\mathcal{A} = \SI{-53}{\decibel}$.
+
+\section{Theoretical maximum value for $Q_{\rm{tot}}$}
+\label{apx:max_Q}
+
+We start from the formula for the maximum internal quality factor $Q_i$ for a cylindrical cavity (\textcite{pozar_microwave_2012}, Chapter 6.4 \textit{Circular Waveguide Cavity Resonators}). This formula is valid for TE$_{nlm}$:
+
+\begin{equation}
+Q_{\rm{i,max}} = \dfrac{(kR)^3 \eta R L}{4(\alpha_{nl}')^2 R_S} \times \dfrac{1 - \left(\dfrac{n}{\alpha_{nl}'}\right)^2}{\dfrac{RL}{2}\left(1 + \left(\dfrac{\beta Rn}{(\alpha_{nl}')^2}\right)^2\right) + \left(\dfrac{\beta R^2}{\alpha_{nl}'}\right)^2\left(1 - \dfrac{n^2}{(\alpha_{nl}')^2}\right)}
+\end{equation}
+
+with:
+\begin{itemize}
+	\item $R$ and $L$ the radius and the length of the cavity
+	\item $k=\dfrac{\omega_{nlm}}{c}$ the wavenumber inside the cavity
+	\item $\eta = \sqrt{\dfrac{\mu}{\varepsilon}} = \sqrt{\dfrac{\mu_r\mu_0}{\varepsilon_r\varepsilon_0}}$ the intrinsic impedance of the medium filling the cavity (in our case: air)
+	\item $\alpha_{nl}'$ the l-th zero of the derivative of the n-th order Bessel function of the first kind $J'_n$
+	\item $R_S = \dfrac{1}{\sigma\delta}=\sqrt{\dfrac{\omega_{nlm}\mu_c}{2\sigma}}$ the surface resistivity
+	\item $\beta=\dfrac{m\pi}{L}$ the axial propagation constant
+\end{itemize}
+
+We also have:
+\begin{equation}
+\label{eq:omega_TE}
+	\omega_{nlm} = c\sqrt{\left(\dfrac{\alpha'_{nl}}{R}\right)^2 + \left(\dfrac{m\pi}{L}\right)^2}
+\end{equation}
+
+The radius is fixed at $R=\SI{25}{\mm}$, so we can determine the cavity length for a given mode and a given frequency (Eq. \ref{eq:omega_TE}).\\
+
+Finally, we use the characteristic values of copper: $\mu_c\approx\mu_0=4\pi\times 10^{-7}\si{\henry\per\m}$ and $\sigma=\SI{5.8e-7}{\siemens\per\m}$, and air: $\mu\approx\mu_0=4\pi\times 10^{-7}\si{\henry\per\m}$ and $\varepsilon\approx\varepsilon_0 = \SI{8.854e-12}{\farad\per\m}$
+
+For each example considered, we also compute $Q_{\rm{t,max}}=\dfrac{Q_{\rm{i,max}}}{2}$ for a critically coupled cavity\\
+
+In section \ref{sec:theory}, we considered TE$_{115}$ at $\omega_{115}=2\pi\times\SI{9.302}{\GHz}$:
+\begin{equation}
+Q_{\rm{i,max}} = \num{35100} \qquad Q_{\rm{t,max}} = \num{17550}
+\end{equation}
+
+In section \ref{sec:automatic_tuning}, we considered TE$_{113}$ at $\omega_{113}=2\pi\times\SI{5.616}{\GHz}$:
+\begin{equation}
+Q_{\rm{i,max}} = \num{25976} \qquad Q_{\rm{t,max}} = \num{12988}
+\end{equation}
+
+It is important to note that the cavity we used has gaps, holes, and a pin coupler inside, so it is impossible to achieve these maximum values. A quality factor of only 60-70\% of the maximum achievable value is still an excellent result.
+
+\section{Backlash of the motor}
+\label{apx:backlash}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=5cm]{Figures/Apx_Motor_1.jpg}
+\caption{Detailed view of the motor and the worm gear}
+\label{fig:apx_wormgear}
+\end{figure}
+
+The position of the piston is adjusted using a worm gear (Figure \ref{fig:apx_wormgear}) to achieve a small step size, but this architecture has a drawback: the backlash of the motor when changing direction. Indeed, for very small steps ($\SI{50}{\nm}$), the finite thread pitch becomes visible. Figure \ref{fig:apx_motor} shows this phenomenon. The two plots correspond to a motor round trip of $\SI{5}{\um}$ with a step between each measurement of $\SI{50}{\nm}$ while we measure $S_{21}$ to compute the filter frequency.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=5cm]{Figures/Backlash_motor.png}
+\caption{Frequency evolution over a motor round trip}
+\label{fig:apx_motor}
+\end{figure}
+
+The first plot corresponds to the forward motion, where we place emphasis on the start frequency (green dashed line). After a $\SI{5}{\um}$ travel, we go back with the same configuration (second plot). In the end, we observe a gap between the starting and ending filter frequencies of approximately $\SI{300}{\kHz}$. If there were no backlash, this gap should be $\SI{0}{\Hz}$.\\
+
+Therefore, that is why we added a gain $G=0.9$ during the tuning of the filter. Without this gain, we risk going too far, which requires going back and suffering from the backlash of the motor (when $G\geqslant 1$). With time, the motor will reach the target frequency, but it could take 20 or 30 more iterations than necessary (compared to $G<1$).
+
+\section{SOL calibration}
+\label{apx:SOL}
+
+The Short-Open-Load calibration is a procedure to artificially move the reference plane of the VNA. It is used to remove errors introduced by the microwave components between the VNA and the DUT, such as finite isolation of circulators or imperfections in the cables. A SOL calibration only corrects reflection measurements ($S_{11}$), but we will continue to write $S_{21}$ since we used a circulator: $S_{21}$ is in general a transmission measurement, but from the filter's perspective, this corresponds to a reflection measurement.\\
+
+During a SOL calibration, we measure the response of a short circuit ($Z=\SI{0}{\ohm}$, $\Gamma=-1$), an open circuit ($Z=+\infty$, $\Gamma=+1$), and a matched load ($Z=\SI{50}{\ohm}$, $\Gamma=0$). Then, we compare the measurements with the ideal response to determine the error coefficient. Finally, we use these coefficients to correct subsequent measurements, and to obtain more accurate $S_{21}$ values of the filter. Figure \ref{fig:apx_SOL} shows the amplitude of the three measurements. We immediately note that these plots do not match with the ideal case, indicating the presence of imperfections between the VNA and the new reference plane.\\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=5cm]{Figures/SOL_Cal.pdf}
+\caption{Amplitude of Short-Open-Load measurements.}
+\label{fig:apx_SOL}
+\end{figure}
+
+Thanks to this calibration, the error can be calculated and decomposed into three terms: the directivity $E_D$, the source match $E_S$, and the reflection tracking $E_R$. The correction between the $S_{21,\rm{meas}}$ and $S_{21,\rm{real}}$ is \cite{rytting_network_nodate}:
+\begin{equation}
+S_{21,\rm{meas}} = E_D + \dfrac{E_R S_{21,\rm{ideal}}}{1 - E_S S_{21,\rm{ideal}}}
+\end{equation}
+
+Therefore, with three known values of $S_{21,\rm{ideal}}$, we can deduce $E_D$, $E_S$ and $E_R$. In theory, we could use any measurement, but it is easier to do a short measurement ($S_{21,\rm{ideal}}=-1$), an open measurement ($S_{21,\rm{ideal}}=+1$) and a load measurement ($S_{21,\rm{ideal}}=0$). The three error coefficients are:
+\begin{align}
+E_D &= S^L_{21,\rm{meas}}\\
+E_S &= \dfrac{S^S_{21,\rm{meas}} + S^O_{21,\rm{meas}} - 2E_D}{S^S_{21,\rm{meas}} - S^O_{21,\rm{meas}}}\\
+E_R &= \dfrac{-2(S^S_{21,\rm{meas}} - E_D)(S^O_{21,\rm{meas}} - E_D)}{S^S_{21,\rm{meas}} - S^O_{21,\rm{meas}}}
+\end{align}
+
+Finally, the formula used to correct an $S_{21}$ measurement is:
+\begin{equation}
+S_{21,\rm{corr}} = \dfrac{S_{21,\rm{meas}} - E_D}{E_R + E_S(S_{21,\rm{meas}} - E_D)}
+\end{equation}
+
+Other correction models exist, with 8, 12 or 16 error coefficients, including also the corrections of the 4 coefficients ($S_{11}$, $S_{21}$, $S_{12}$, $S{22}$).
+
+
+%\section{Sideband cooling and thermal peak theory}
+%\label{apx:gstheory}
+
+\section{Pictures of the filter}
+\label{apx:pict_filter}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=5cm]{Figures/Apx_Filter_1.jpg}
+\hspace{0.3cm}
+\includegraphics[height=5cm]{Figures/Apx_Filter_2.jpg}
+\hspace{0.3cm}
+\includegraphics[height=5cm]{Figures/Apx_Filter_4.jpg}
+\hspace{0.3cm}
+\includegraphics[height=5cm]{Figures/Apx_Filter_3.jpg}
+\caption{Pictures of the cavity and the pin coupler}
+\label{fig:apx_filter}
+\end{figure}
+
+Figure \ref{fig:apx_filter} shows multiple views of the cavity.\\ 
+
+The first picture is a side view of the open end of the cavity: The motor (in black) acts as a support for the copper piston, fixed to the motor with an aluminum piece (light gray). We easily see the cylindrical shape of the cavity, and understand the mechanism used to change the length.\\
+
+The second picture is an old design where we used spacers between the steel plate and the cavity. This design was abandoned since it let the electromagnetic field leak out of the cavity, and weakened the electrical contact, resulting in poorer grounding. This picture is very useful to understand how the different parts of the setup are put together. From left to right: SMA cable (blue), hollow aluminium cylinder, copper ring with two stop screws, steel plate and its two screws to attach it to the cavity, solder cup and finally the pin (not visible). \\
+
+The third picture is a view of the opposite side of the cavity (compared to the first picture). It is where the pin coupler enters the cavity, through the small hole. Furthermore, it is slightly off-centered which makes the rotation of the pin is asymmetric.\\
+
+The last picture shows two pins with different lengths. At the beginning of the experiments, we tried several pin shapes in order to find the strongest coupling. The two main parameters we modified were the pin length and the angle of the curve. A smaller pin leads to stronger coupling with TE modes, but the main drawback was a decrease in tunability. Indeed, reducing the curve results in a smaller asymmetry with respect to the pin rotation.
+
+\section{Pictures of the experimental setup}
+\label{apx:pict_exp}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=4.5cm]{Figures/Exp_3.jpg}
+\hspace{0.3cm}
+\includegraphics[height=4.5cm]{Figures/Exp_1_Arrow.png}
+\hspace{0.3cm}
+\includegraphics[height=4.5cm]{Figures/Exp_2.jpg}
+\caption{Pictures of the experimental setup.}
+\label{fig:apx_exp_setup}
+\end{figure}
+
+Figure \ref{fig:apx_exp_setup} shows how the filter is integrated into the cryostat measurement rack of the cryostat. It also explains the path of the microwave signal, from the generator to the measurement devices.\\
+
+The first picture shows the measurement racks used with the cryostat (see Appendix \ref{apx:pict_fridge}). Left rack (from top to bottom): 2-port VNA used when we do not need 4 ports, microwave generator, plate to fix microwave components for measurements, such as circulators and directional couplers. Right rack: 4-port VNA used and we need multiple parallel measurements, Signal Analyzer (SA, in black) and finally the filter.
+
+The second picture is a detailed view of the plank mentioned above. In blue, there are three directional couplers. These components are very useful to send probe tones (from a VNA for example) to a DUT while a strong tone is applied.
+
+The microwave signal path from the source to the SA starts from the input drive signal from the generator (pink arrow in the background), then it goes through a circulator (white) and the filter (double red arrow). After the circulator, the signal enters and returns from the cryostat  (red arrows in the foreground) with a room temperature amplifier (red square) before measuring with the SA (pink arrow in the foreground). Meanwhile, we measured the $S_{21}$ response of the superconducting cavity in the cryostat (yellow arrows) while a red sideband drive was applied, and a third directional coupler was used to measure $S_{43}$ of the filter (double green arrow). The idea with this setup was to measure the cavity frequency during ground-state cooling in order to tune the filter to the exact frequency ($\omega_c$), and also to ensure that we drive on the red sideband. Unfortunately, this setup was quite complex; that is why we recommend using microwave switches instead of directional couplers.\\
+
+The last picture shows us a close look at the filter once it is put on the rack. The motor is behind, so that the pin remains in front of the rack, to maintain easy access when we want to tune the cavity.
+
+\section{Pictures of the fridge}
+\label{apx:pict_fridge}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=5cm]{Figures/Fridge_1.jpg}
+\hspace{0.5cm}
+\includegraphics[height=5cm]{Figures/Fridge_3.jpg}
+\hspace{0.5cm}
+\includegraphics[height=5cm]{Figures/Fridge_2.jpg}
+\caption{Pictures of the dilution refrigerator.}
+\label{fig:apx_fridge}
+\end{figure}
+
+Figure \ref{fig:apx_fridge} shows three views of the cryostat, from the mixing chamber (coldest stage of the cryostat, at $\SI{10}{\milli\kelvin}$) to room temperature shield.\\
+
+The first picture gives us an overview of the inside of a dilution refrigerator. There are several levels (from top to bottom): $\SI{50}{\kelvin}$ flange (not visible, behind the upper white shield), $\SI{4}{\kelvin}$ flange, Still plate ($\SI{800}{\milli\kelvin}$), Cold plate ($\SI{100}{\milli\kelvin}$) and finally the mixing chamber ($\SI{10}{\milli\kelvin}$). Below the mixing chamber, there are two cans since two experiments are run in parallel. 
+
+The middle one is suspended from the Still plate with a spring; optomechanical experiments are very sensitive to outside vibrations, especially those generated by the pulse tube (not visible, between the $\SI{4}{\kelvin}$ flange and $\SI{50}{\kelvin}$ flange.). The pulse tube generates vibrations around $\SI{1.4}{\Hz}$, and the spring is used to attenuate them.
+
+The left can is directly mounted on the mixing chamber, and contains mechanical drums (Figure \ref{fig:LC_circuit}) mainly used during this internship.\\
+
+The second picture is the same cryostat with the mixing chamber shield. This is the first shield out of a total of five shields. The role of these multiple shields is to protect the samples from outside perturbations such as radiations, vibrations and also to act as thermal protection.\\
+
+The last picture shows the cryostat once the last shield is mounted. Then, the air inside is pumped and the cool down can start. Because of the massive heat load (two cans) and the weak thermal connection between the suspended can and the mixing chamber, the cooldown from room temperature to $\SI{20}{\milli\kelvin}$ takes approximately 4 days.
+
+\section{Python scripts and data analysis}
+\label{apx:python}
+
+Python scripts developed during this internship are available in a public GitHub repository. 
+
+The repository contains the python library \textit{tunable microwave cavity} developed during the internship to control and automatically tune the filter. The library has since been integrated into the SteeleLab software ecosystem, making it available for future experiments and developments within the group. There is also documentation to facilitate its use. Furthermore, scripts for measurement analysis are provided
+
+\textbf{GitHub repository:} \url{https://github.com/PSeguin05/SteeleLab_Internship.git} 
+
+\end{document}
+
+
+
